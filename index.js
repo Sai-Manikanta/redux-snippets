@@ -1,42 +1,14 @@
 import store from './store/configureStore.js'
+import { addTodo, toggleTodoCompleate, removeTodo } from './store/todos/actionCreators.js'
 
 console.log("intial state", store.getState());
 
 const unSubscribe = store.subscribe(() => console.log(store.getState()));
 
-store.dispatch({
-    type: "todoAdded",
-    payload: {
-        description: "Drink milk"
-    }
-})
-
-store.dispatch({
-    type: "todoAdded",
-    payload: {
-        description: "Buy Groceries"
-    }
-})
-
-store.dispatch({
-    type: "todoAdded",
-    payload: {
-        description: "Car Service"
-    }
-})
-
-store.dispatch({
-    type: "todoCompleateToggle",
-    payload: {
-        _id: 3
-    }
-})
-
-store.dispatch({
-    type: "todoRemoved",
-    payload: {
-        _id: 1
-    }
-})
+store.dispatch(addTodo('Drink milk'));
+store.dispatch(addTodo('Buy groceries'));
+store.dispatch(addTodo('Car Service'));
+store.dispatch(toggleTodoCompleate(3))
+store.dispatch(removeTodo(1))
 
 unSubscribe();

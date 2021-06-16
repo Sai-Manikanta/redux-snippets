@@ -1,5 +1,5 @@
 import store from './store/configureStore.js'
-import { addTodo, toggleTodoCompleate, removeTodo } from './store/todos/actionCreators.js'
+import { addTodo, toggleTodoCompleate, removeTodo } from './store/todos.js'
 
 console.log("intial state", store.getState());
 

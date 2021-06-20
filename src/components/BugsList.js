@@ -1,35 +1,48 @@
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { Component } from 'react'
+import { connect } from 'react-redux'
 import { loadBugs, removeBug, resolveBug } from '../store/bugs'
 
-function BugsList() {
-    const { list: bugs } = useSelector(store => store.entities.bugs);
-    const dispatch = useDispatch();
+class BugsList extends Component {
 
-    useEffect(() => {
-        dispatch(loadBugs())
-    },[dispatch])
+    componentDidMount(){
+        this.props.loadBugs()
+    }
 
-    return (
-        <div>
-            <button onClick={() => dispatch(loadBugs())}>
-                Load bugs
-            </button>
-            {bugs.map(bug => (
-                <div key={bug._id}>
-                    <p 
-                        onClick={() => dispatch(resolveBug(bug._id))}
-                        style={{ textDecoration: `${bug.resolve ? 'line-through' : 'none'}` }}
-                    >
-                        {bug.description}
-                    </p>
-                    <button onClick={() => dispatch(removeBug(bug._id))}>
-                        resolve
-                    </button>
-                </div>
-            ))}
-        </div>
-    )
+    render(){
+        return(
+            <div>
+                {this.props.bugs.list.map(bug => (
+                    <div key={bug._id}>
+                        <p 
+                            onClick={() => this.props.resolveBug(bug._id)}
+                            style={{ textDecoration: `${bug.resolve ? 'line-through' : 'none'}` }}
+                        >
+                            {bug.description}
+                        </p>
+                        <button 
+                            onClick={() => this.props.removeBug(bug._id)}
+                        >
+                            resolve
+                        </button>
+                    </div>
+                ))}
+            </div>  
+        )
+    }
+} 
+
+function mapStateToProps(store){
+    return {
+        bugs: store.entities.bugs
+    }
 }
 
-export default BugsList
+function mapDispatchToProps(dispatch){
+    return {
+        loadBugs: () => dispatch(loadBugs()),
+        removeBug: id => dispatch(removeBug(id)),
+        resolveBug: id => dispatch(resolveBug(id))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BugsList)

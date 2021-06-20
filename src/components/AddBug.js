@@ -1,27 +1,39 @@
-import { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { Component } from 'react'
+import { connect } from 'react-redux'
 import { addBug } from '../store/bugs'
 
-function AddBug() {
-    const descInputRef = useRef();
-    const dispatch = useDispatch();
-
-    const handleSubmit = e => {
-        e.preventDefault();
-        const description = descInputRef.current.value;
-        dispatch(addBug(description));
-        descInputRef.current.value = '';
+class AddBug extends Component {
+    state = {
+        description: ''
     }
 
-    return (
-        <div>
-            <h1>Add Bug</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="text" ref={descInputRef} />
-                <button tyep="submit">Add bug</button>
-            </form>
-        </div>
-    )
+    handleChange = e => {
+        this.setState({ description: e.target.value })
+    }
+
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.addBug(this.state.description);
+        this.setState({ description: '' });
+    }
+
+    render(){
+        return(
+            <div>
+                <h1>Add Bug</h1>
+                <form onSubmit={this.handleSubmit}>
+                    <input type="text" onChange={this.handleChange} />
+                    <button tyep="submit">Add bug</button>
+                </form>
+            </div>
+        )   
+    }
 }
 
-export default AddBug
+function mapDispatchToProps(dispatch){
+    return {
+        addBug: description => dispatch(addBug(description))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(AddBug)
